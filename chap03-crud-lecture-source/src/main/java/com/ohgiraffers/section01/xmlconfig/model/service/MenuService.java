@@ -36,4 +36,64 @@ public class MenuService {
 
         return menuList;
     }
+
+    public MenuDTO selectMenuByMenuCode(int code) {
+
+        SqlSession sqlSession = getSqlSession();
+
+        MenuDTO menu = menuDAO.selectMenuByMenuCode(sqlSession,code);
+
+        sqlSession.close();
+
+        return menu;
+    }
+
+    public boolean insertNewMenu(MenuDTO newMenu) {
+
+        SqlSession sqlSession =getSqlSession();
+         int result =  menuDAO.insertNewMenu(sqlSession, newMenu);
+
+         // dml(insert, delete, update)는 트랜젝셩 제어 필요. -> 저장할지 말지
+
+        if (result > 0){
+            sqlSession.commit();
+        } else {
+            sqlSession.rollback();
+        }
+
+        sqlSession.close();
+
+        return result > 0 ? true : false;
+    }
+
+    public boolean updateMenu(MenuDTO updateMenu) {
+
+        SqlSession sqlSession = getSqlSession();
+
+        int result = menuDAO.updateMenu(sqlSession, updateMenu);
+
+        if (result > 0){
+            sqlSession.commit();
+        } else {
+            sqlSession.rollback();
+        }
+
+        sqlSession.close();
+
+        return result > 0 ? true : false;
+    }
+
+    public boolean deleteMenu(int code) {
+        SqlSession sqlSession = getSqlSession();
+
+        int result = menuDAO.deleteMenu(sqlSession, code);
+
+        if (result > 0){
+            sqlSession.commit();
+        } else{
+            sqlSession.rollback();
+        }
+
+        return result > 0 ? true : false;
+    }
 }

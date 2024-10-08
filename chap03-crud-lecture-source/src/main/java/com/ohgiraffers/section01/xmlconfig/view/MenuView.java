@@ -1,7 +1,10 @@
 package com.ohgiraffers.section01.xmlconfig.view;
 
 import com.ohgiraffers.section01.xmlconfig.controller.MenuController;
+import com.ohgiraffers.section01.xmlconfig.model.dto.MenuDTO;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class MenuView {
@@ -33,10 +36,87 @@ public class MenuView {
                 case 1 :
                     menuController.selectAllMenu();
                     break;
+                case 2:
+                    menuController.selectMenuByCode(inputMenuCode());
+                    break;
+                case 3:
+                    menuController.insertNewMenu(inputMenu());
+                    break;
+                case 4:
+                    menuController.updateMenu(updateMenuInfo());
+                    break;
+                case 5:
+                    menuController.deleteMenu(deleteMenuCode());
+                    break;
             }
 
 
         } while (true);
         
+    }
+
+    private static Map<String, String> inputMenuCode(){
+
+        Scanner sc = new Scanner(System.in);
+        System.out.print("검색하실 메뉴의 코드를 입력해주세요: ");
+        String menuCode = sc.nextLine();
+
+        Map<String,String> parameter = new HashMap<>();
+
+        parameter.put("menuCode",menuCode);
+
+        return parameter;
+    }
+
+    private static Map<String, String> inputMenu(){
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("메뉴의 이름을 입력해주세요: ");
+        String menuName = sc.nextLine();
+
+        System.out.print("메뉴의 가격을 입력해주세요: ");
+        String menuPrice = sc.nextLine();
+
+        System.out.print("메뉴의 카테고리 코드를 입력해주세요: ");
+        String category = sc.nextLine();
+
+        Map<String, String> newMenu = new HashMap<>();
+
+        newMenu.put("menuName",menuName);
+        newMenu.put("menuPrice",menuPrice);
+        newMenu.put("category",category);
+
+        return newMenu;
+    }
+
+    private static Map<String, String> updateMenuInfo(){
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("수정하실 메뉴의 번호를 입력해주세요: ");
+        String menuCode = sc.nextLine();
+        System.out.print("수정하실 메뉴의 이름를 입력해주세요: ");
+        String menuName = sc.nextLine();
+        System.out.print("수정하실 메뉴의 가격를 입력해주세요: ");
+        String menuPrice = sc.nextLine();
+        System.out.print("수정하실 메뉴의 카테고리 코드를 입력해주세요: ");
+        String categoryCode = sc.nextLine();
+
+        Map<String,String > updateMenu = new HashMap<>();
+
+        updateMenu.put("menuCode",menuCode);
+        updateMenu.put("menuName",menuName);
+        updateMenu.put("menuPrice",menuPrice);
+        updateMenu.put("category",categoryCode);
+
+        return updateMenu;
+    }
+
+    private static int deleteMenuCode(){
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("삭제하실 메뉴의 번호를 입력해주세요: ");
+        int code = sc.nextInt();
+
+        return code;
     }
 }

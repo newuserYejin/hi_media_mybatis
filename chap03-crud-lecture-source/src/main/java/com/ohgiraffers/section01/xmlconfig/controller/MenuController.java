@@ -5,6 +5,7 @@ import com.ohgiraffers.section01.xmlconfig.model.service.MenuService;
 import com.ohgiraffers.section01.xmlconfig.view.PrintResult;
 
 import java.util.List;
+import java.util.Map;
 
 public class MenuController {
 
@@ -32,9 +33,66 @@ public class MenuController {
         if (menuList != null){
             printResult.printMenuList(menuList);
         } else{
-            System.out.println("조회결과가 없습니다.");
+            printResult.printErrorMessage("selectList");
+        }
+
+    }
+
+    public void selectMenuByCode(Map<String, String> parameter) {
+        int code = Integer.parseInt(parameter.get("menuCode"));
+        MenuDTO menu = menuService.selectMenuByMenuCode(code);
+
+        if (menu != null){
+            printResult.printMenu(menu);
+        } else {
+            printResult.printErrorMessage("selectOne");
         }
     }
 
+    public void insertNewMenu(Map<String, String> parameter) {
 
+        String menuName = parameter.get("menuName");
+        int menuPrice = Integer.parseInt(parameter.get("menuPrice"));
+        int categoryCode = Integer.parseInt(parameter.get("category"));
+
+        MenuDTO newMenu = new MenuDTO();
+        newMenu.setMenuName(menuName);
+        newMenu.setMenuPrice(menuPrice);
+        newMenu.setcategoryCode(categoryCode);
+
+        if(menuService.insertNewMenu(newMenu)){
+            printResult.printSuccessMessage("insert");
+        } else {
+            printResult.printErrorMessage("insertError");
+        }
+    }
+
+    public void updateMenu(Map<String, String> parameter) {
+
+        int menuCode = Integer.parseInt(parameter.get("menuCode"));
+        String menuName = parameter.get("menuName");
+        int menuPrice = Integer.parseInt(parameter.get("menuPrice"));
+        int categoryCode = Integer.parseInt(parameter.get("category"));
+
+        MenuDTO updateMenu = new MenuDTO();
+        updateMenu.setMenuCode(menuCode);
+        updateMenu.setMenuName(menuName);
+        updateMenu.setMenuPrice(menuPrice);
+        updateMenu.setcategoryCode(categoryCode);
+
+        if (menuService.updateMenu(updateMenu)){
+            printResult.printSuccessMessage("update");
+        } else{
+            printResult.printErrorMessage("updateError");
+        }
+
+    }
+
+    public void deleteMenu(int code) {
+        if (menuService.deleteMenu(code)){
+            printResult.printSuccessMessage("delete");
+        } else {
+            printResult.printErrorMessage("deleteError");
+        }
+    }
 }
