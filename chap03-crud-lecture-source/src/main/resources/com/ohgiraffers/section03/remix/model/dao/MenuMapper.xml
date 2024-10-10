@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+    javaconfig의 장점과 xmlconfig의  장점을 결합한 reminx에서의 중요 포인트.
+    1. dao 인터페이스의 경로와 관련 xml의 경로 전체가 동일해야한다.
+        main/java 뒤에서부터의 경로와 resource 뒤에서부터의 경로가 동일해야한다는 얘기
+
+    2. mapper의 namespace 속성을 dao 인터페이스의 풀네임으로 지정해야한다.
+
+    3. dao 인터페이스의 이름과 xml 파일의 이름이 동리해야 한다.
+
+    4. dao에 작성한 메소드의 이름과 SQL 문의 id를 일치시켜야 한다.
+-->
+
+<!--2번-->
+<mapper namespace="com.ohgiraffers.section03.remix.model.dao.MenuMapper">
+
+    <resultMap id="menuResultMap" type="com.ohgiraffers.section03.remix.model.dto.MenuDTO">
+        <id property="menuCode" column="MENU_CODE"/>
+        <result property="menuName" column="MENU_NAME"/>
+        <result property="menuPrice" column="MENU_PRICE"/>
+        <result property="categoryCode" column="CATEGORY_CODE"/>
+        <result property="orderableStatus" column="ORDERABLE_STATUS"/>
+    </resultMap>
+
+    <select id="selectAllMenu" resultMap="menuResultMap">
+        SELECT
+            *
+        FROM
+            TBL_MENU
+        WHERE
+            ORDERABLE_STATUS = 'Y'
+        ORDER BY
+            MENU_CODE
+    </select>
+
+    <select id="selectMenuByMenuCode" resultMap="menuResultMap" parameterType="_int">
+        SELECT
+            *
+        FROM
+            TBL_MENU
+        WHERE
+            MENU_CODE = #{code}
+    </select>
+
+    <insert id="insertNewMenu" parameterType="com.ohgiraffers.section03.remix.model.dto.MenuDTO">
+        INSERT INTO TBL_MENU
+        (MENU_NAME, MENU_PRICE, CATEGORY_CODE, ORDERABLE_STATUS)
+        VALUES
+        (#{menuName},#{menuPrice},#{categoryCode}, 'Y')
+    </insert>
+
+    <update id="updateMenu" parameterType="com.ohgiraffers.section03.remix.model.dto.MenuDTO">
+        UPDATE TBL_MENU
+        SET
+            MENU_NAME = #{menuName},
+            MENU_PRICE = #{menuPrice},
+            CATEGORY_CODE = #{categoryCode}
+        WHERE
+            MENU_CODE = #{menuCode}
+    </update>
+
+</mapper>
