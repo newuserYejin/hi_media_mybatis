@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ohgiraffers.section01.dynamic.DynamicSqlMapper">
+
+    <!-- gte: 크거나 같음 ,gt : 크다, lte: 작거나 같음, lt: 작다 -->
+
+    <!-- <![CDATA[문장]]> -->
+
+    <resultMap id="menuResultMap" type="menuDTO">
+
+        <id property="code" column="MENU_CODE"/>
+        <result property="name" column="MENU_NAME"/>
+        <result property="price" column="MENU_PRICE"/>
+        <result property="categoryCode" column="CATEGORY_CODE"/>
+        <result property="orderableStatus" column="ORDERABLE_STATUS"/>
+
+    </resultMap>
+
+    <select id="selectMenuByPrice" parameterType="hashmap" resultMap="menuResultMap">
+
+        SELECT
+            MENU_CODE
+            , MENU_NAME
+            , MENU_PRICE
+            , CATEGORY_CODE
+            , ORDERABLE_STATUS
+        FROM
+            TBL_MENU
+        WHERE
+            ORDERABLE_STATUS = 'Y'
+
+        <if test="price gte 0 and price lt 10000">
+            <![CDATA[
+            AND MENU_PRICE < #{price}
+            ]]>
+        </if>
+
+        <if test="price gt 10000 and price lte 20000">
+            AND MENU_PRICE BETWEEN 10000 AND #{price}
+        </if>
+
+        <if test="price gt 20000 and price lte 30000">
+            AND MENU_PRICE BETWEEN 20000 AND #{price}
+        </if>
+
+        <if test="price gt 30000">
+            AND MENU_PRICE BETWEEN 30000 AND #{price}
+        </if>
+    </select>
+
+    <select id="searchMenu" parameterType="com.ohgiraffers.common.SearchCriteria" resultMap="menuResultMap" >
+
+        SELECT
+            A.MENU_CODE
+            , A.MENU_NAME
+            , A.MENU_PRICE
+            , A.CATEGORY_CODE
+            , A.ORDERABLE_STATUS
+        FROM
+            TBL_MENU A
+            <if test="condition == 'category'">
+                JOIN TBL_CATEGORY B ON A.CATEGORY_CODE = B.CATEGORY_CODE
+            </if>
+        WHERE
+            A.ORDERABLE_STATUS = 'Y'
+
+        <if test="condition == 'category'">
+            AND B.CATEGORY_NAME = #{value}
+        </if>
+
+        <if test="condition == 'menuName'">
+            AND A.MENU_NAME LIKE CONCAT('%',#{value},'%')
+        </if>
+
+    </select>
+
+    <!--
+        <choose> (when/otherwise) 태그: java 에서의 switch-case
+    -->
+    <select id="searchMenuBySupCategory" parameterType="com.ohgiraffers.common.SearchCriteria" resultMap="menuResultMap">
+        SELECT
+            *
+        FROM
+            TBL_MENU
+        WHERE
+            ORDERABLE_STATUS = 'Y'
+        <choose>
+            <when test="value == '식사'">
+                and CATEGORY_CODE in (1,4,5)
+            </when>
+            <when test="value = '음료'">
+                and CATEGORY_CODE in (8,9,10)
+            </when>
+            <otherwise>
+                and CATEGORY_CODE in (3)
+            </otherwise>
+        </choose>
+        ORDER BY MENU_CODE
+    </select>
+
+</mapper>

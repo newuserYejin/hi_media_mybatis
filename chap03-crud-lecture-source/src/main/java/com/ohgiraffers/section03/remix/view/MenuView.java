@@ -28,6 +28,7 @@ public class MenuView {
             System.out.println("3. 신규 메뉴 등록하기");
             System.out.println("4. 메뉴 수정하기");
             System.out.println("5. 메뉴 삭제하기");
+            System.out.println("6. 보너스 조회하기");
             System.out.println("=======================================");
             System.out.print("실행할 메뉴를 선택해주세요: ");
             int num = sc.nextInt();
@@ -48,6 +49,9 @@ public class MenuView {
 //                case 5:
 //                    menuController.deleteMenu(deleteMenuCode());
 //                    break;
+                case 6:
+                    menuController.selectBonus(bonusInfo());
+                    break;
             }
 
 
@@ -118,5 +122,19 @@ public class MenuView {
         int code = sc.nextInt();
 
         return code;
+    }
+
+    private static Map<String,String> bonusInfo(){
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("보너스율 입력: ");
+
+        String bo = sc.nextLine();
+
+        Map<String,String> boMap = new HashMap<>();
+
+        boMap.put("bonus",bo);
+
+        return boMap;
     }
 }

@@ -89,6 +89,13 @@ public class MenuController {
 
     }
 
+    public void selectBonus(Map<String, String> parameter) {
+
+        double bonusPercent = Double.parseDouble(parameter.get("bonus"));
+
+
+    }
+
 //    public void deleteMenu(int code) {
 //        if (menuService.deleteMenu(code)){
 //            printResult.printSuccessMessage("delete");
@@ -96,4 +103,5 @@ public class MenuController {
 //            printResult.printErrorMessage("deleteError");
 //        }
 //    }
+
 }
