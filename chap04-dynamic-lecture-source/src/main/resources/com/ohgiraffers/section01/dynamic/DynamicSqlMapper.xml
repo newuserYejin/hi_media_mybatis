@@ -123,7 +123,6 @@
             <foreach collection="randomCodeList" item="menuCode" open="(" close=")" separator=",">
                 #{menuCode}
             </foreach>
-
     </select>
 
     <select id="searchMenuByCodeOrSearchAll" parameterType="Search" resultMap="menuResultMap">

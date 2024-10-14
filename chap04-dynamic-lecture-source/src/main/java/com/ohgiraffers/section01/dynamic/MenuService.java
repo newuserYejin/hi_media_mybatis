@@ -31,12 +31,13 @@ public class MenuService {
         List<menuDTO> menuList =  mapper.selectMenuByPrice(map);
 
         if (menuList != null && menuList.size() > 0){
+
             for(menuDTO menu : menuList){
                 System.out.println(menu);
             }
 
-            System.out.println("===============외부로 넘겨서 출력하기================");
-            print.printList(menuList);
+//            System.out.println("===============외부로 넘겨서 출력하기================");
+//            print.printList(menuList);
             
         } else {
             System.out.println("검색 결과가 없습니다.");

@@ -192,8 +192,6 @@ public class Application {
         List<Integer> menuCodeList = new ArrayList<>(set);
         Collections.sort(menuCodeList);
 
-        System.out.println(set);
-
         return menuCodeList;
     }
 
