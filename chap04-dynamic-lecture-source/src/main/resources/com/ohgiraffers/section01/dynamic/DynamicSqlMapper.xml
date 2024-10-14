@@ -100,4 +100,67 @@
         ORDER BY MENU_CODE
     </select>
 
+
+    <!--
+        <foreach>
+            1. collection : 반복을 수행할 대상
+            2. item : 반복 수행할 때마다 꺼내올 값을 담아둘 변수
+            3. open : 맨 앞에 위치
+            4. separator : 반복이 수행될때 꺼내온 item 사이에 들어갈 문자.
+            5. close : 맨 뒤에 위치
+    -->
+
+    <select id="searchMenuByRandomCode" parameterType="hashmap" resultMap="menuResultMap">
+
+        SELECT
+            *
+        FROM
+            TBL_MENU
+        WHERE
+            ORDERABLE_STATUS = 'Y'
+        AND
+            MENU_CODE IN
+            <foreach collection="randomCodeList" item="menuCode" open="(" close=")" separator=",">
+                #{menuCode}
+            </foreach>
+
+    </select>
+
+    <select id="searchMenuByCodeOrSearchAll" parameterType="Search" resultMap="menuResultMap">
+        SELECT
+            *
+        FROM
+            TBL_MENU
+        <if test="condition != null and condition eq 'menuCode' ">
+            <where>
+                MENU_CODE = #{value}
+            </where>
+        </if>
+    </select>
+
+    <select id="searchMenuNameOrCategory" parameterType="hashmap" resultMap="menuResultMap">
+
+        SELECT
+            *
+        FROM
+            TBL_MENU
+        <!--아래 코드는 카테고리로만 조회할 때 문제 발생-->
+<!--        <if test="nameValue != null">-->
+<!--            WHERE MENU_NAME LIKE CONCAT('%', #{nameValue},'%')-->
+<!--        </if>-->
+<!--        <if test="categoryValue != null">-->
+<!--            AND CATEGORY_CODE = #{categoryValue]-->
+<!--        </if>-->
+
+        <!-- 해결 방안 : <where> 사용 -->
+        <where>
+             <if test="nameValue != null">
+                 WHERE MENU_NAME LIKE CONCAT('%', #{nameValue},'%')
+             </if>
+            <if test="categoryValue != null">
+                AND CATEGORY_CODE = #{categoryValue]
+            </if>
+        </where>
+    </select>
+
 </mapper>
