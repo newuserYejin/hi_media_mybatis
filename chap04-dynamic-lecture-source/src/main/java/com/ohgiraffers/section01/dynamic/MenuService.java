@@ -143,4 +143,22 @@ public class MenuService {
 
         sqlSession.close();
     }
+
+    public void modifyMenu(Map<String, Object> criteria) {
+
+        SqlSession sqlSession = getSqlSession();
+        mapper = sqlSession.getMapper(DynamicSqlMapper.class);
+
+        int result = mapper.modifyMenu(criteria);
+
+        if (result > 0){
+            System.out.println("변경에 성공했습니다.");
+            sqlSession.commit();
+        } else {
+            System.out.println("메뉴 정보 변경에 실패했습니다.");
+            sqlSession.rollback();
+        }
+
+
+    }
 }

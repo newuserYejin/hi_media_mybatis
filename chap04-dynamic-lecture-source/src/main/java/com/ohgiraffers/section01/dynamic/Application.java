@@ -1,6 +1,7 @@
 package com.ohgiraffers.section01.dynamic;
 
 import com.ohgiraffers.common.SearchCriteria;
+import org.apache.ibatis.javassist.bytecode.analysis.SubroutineScanner;
 
 import java.util.*;
 
@@ -47,27 +48,59 @@ public class Application {
         Scanner sc = new Scanner(System.in);
         MenuService menuService = new MenuService();
 
-        System.out.println("========trim 서브메뉴========");
-        System.out.println("1. 검색조건이 있는경우 메뉴코드로 조회, 단 없으면 전체 조회");
-        System.out.println("2. 메뉴 혹은 카테고리로 검색, 단 메뉴와 카테고리 둘 다 일치하는 겨우로 검색, 검색 조건 없으면 전체 조회");
-        System.out.println("3. 원하는 메뉴 정보만 수정하기");
-        System.out.println("9. 이전 메뉴로 이동");
+        do {
+            System.out.println("========trim 서브메뉴========");
+            System.out.println("1. 검색조건이 있는경우 메뉴코드로 조회, 단 없으면 전체 조회");
+            System.out.println("2. 메뉴 혹은 카테고리로 검색, 단 메뉴와 카테고리 둘 다 일치하는 겨우로 검색, 검색 조건 없으면 전체 조회");
+            System.out.println("3. 원하는 메뉴 정보만 수정하기");
+            System.out.println("9. 이전 메뉴로 이동");
 
-        System.out.println("\n원하는 메뉴를 선택하세요: ");
+            System.out.print("\n원하는 메뉴를 선택하세요: ");
 
-        int no = sc.nextInt();
+            int no = sc.nextInt();
 
-        switch (no){
-            case 1:
-                menuService.searchMenuCodeOrSearchAll(inputAllOrOne());
-                break;
-            case 2:
-                menuService.searchMenuNameOrcategory(searchCriteriaMap());
-                break;
-            case 9:
-                return;
-        }
+            switch (no){
+                case 1:
+                    menuService.searchMenuCodeOrSearchAll(inputAllOrOne());
+                    break;
+                case 2:
+                    menuService.searchMenuNameOrcategory(searchCriteriaMap());
+                    break;
+                case 3:
+                    menuService.modifyMenu(inputChage());
+                    break;
+                case 9:
+                    return;
+            }
 
+        } while(true);
+    }
+
+    private static Map<String, Object> inputChage() {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("변경할 메뉴 코드를 입력해주세요: ");
+        int code = sc.nextInt();
+
+        sc.nextLine();
+        System.out.print("변경할 메뉴의 이름을 입력해주세요: ");
+        String name = sc.nextLine();
+
+        System.out.print("변경할 메뉴의 카테고리 코드를 입력해주세요: ");
+        int categoryCode = sc.nextInt();
+
+        sc.nextLine();
+        System.out.print("변경할 메뉴의 판매여부를 입력해주세요: ");
+        String orderableStatus = sc.nextLine();
+
+        Map<String, Object> criteria = new HashMap<>();
+
+        criteria.put("code",code);
+        criteria.put("name",name);
+        criteria.put("categoryCode",categoryCode);
+        criteria.put("orderableStatus",orderableStatus);
+
+        return criteria;
     }
 
     private static Map<String, Object> searchCriteriaMap() {

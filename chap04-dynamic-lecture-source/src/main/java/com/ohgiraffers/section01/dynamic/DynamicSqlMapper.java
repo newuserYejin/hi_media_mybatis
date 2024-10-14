@@ -18,4 +18,6 @@ public interface DynamicSqlMapper {
     List<menuDTO> searchMenuByCodeOrSearchAll(SearchCriteria searchCriteria);
 
     List<menuDTO> searchMenuNameOrCategory(Map<String, Object> criteria);
+
+    int modifyMenu(Map<String, Object> criteria);
 }

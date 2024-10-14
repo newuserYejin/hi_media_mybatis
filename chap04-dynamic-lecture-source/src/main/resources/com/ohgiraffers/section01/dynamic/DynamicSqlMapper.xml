@@ -152,15 +152,84 @@
 <!--            AND CATEGORY_CODE = #{categoryValue]-->
 <!--        </if>-->
 
-        <!-- 해결 방안 : <where> 사용 -->
-        <where>
-             <if test="nameValue != null">
-                 WHERE MENU_NAME LIKE CONCAT('%', #{nameValue},'%')
-             </if>
-            <if test="categoryValue != null">
-                AND CATEGORY_CODE = #{categoryValue]
+        <!-- 해결 방안 : 1. <where> 사용 -->
+        <!--
+            조건에 만족되지 않는 if는 무시하고 만족되는 if 내문 조건문만을 실행한다.
+            단, and 나 or과 같은것으로 조건문이 시작될 시 자동으로 and 또는 or을 제거한 조건문이 실행된다.
+        -->
+<!--        <where>-->
+<!--             <if test="nameValue != null">-->
+<!--                 MENU_NAME LIKE CONCAT('%', #{nameValue},'%')-->
+<!--             </if>-->
+<!--            <if test="categoryValue != null">-->
+<!--                AND CATEGORY_CODE = #{categoryValue}-->
+<!--            </if>-->
+<!--        </where>-->
+
+        <!-- 해결 방안 : 2. <trim> 사용 -->
+        <!--
+            where 태그의 상위 버전
+            and 나 or 로 시작하지 않는것도 가능
+
+            prefix : 가장 앞에 붙여줄 내용
+            prefixOverrides : 가장 앞 속성에 해당하는 뮨자 삭제
+            suffix : 가장 뒤에 붙여주는 내용
+            suffixOverrides :  가장 뒤 속성에 해당하는 값 삭제
+        -->
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="nameValue != null">
+                MENU_NAME LIKE CONCAT('%', #{nameValue},'%')
             </if>
-        </where>
+            <if test="categoryValue != null">
+                AND CATEGORY_CODE = #{categoryValue}
+            </if>
+        </trim>
+
     </select>
+
+    <update id="modifyMenu" parameterType="hashmap">
+
+<!--        UPDATE-->
+<!--            TBL_MENU-->
+<!--        SET-->
+<!--            -->
+<!--            MENU_NAME = #{name},-->
+<!--            CATEGORY_CODE = #{categoryCode},-->
+<!--            ORDERABLE_STATUS = #{orderableStatus}-->
+<!--        WHERE-->
+<!--            MENU_CODE = #{code}-->
+
+        <!--일부만 바꾸고 싶다면?-->
+
+        UPDATE
+            TBL_MENU
+<!--        <set>-->
+<!--            <if test="name != null and name != ''">-->
+<!--                MENU_NAME = #{name}-->
+<!--            </if>-->
+<!--            <if test="categoryCode != null and categoryCode gt 0">-->
+<!--                ,CATEGORY_CODE = #{categoryCode}-->
+<!--            </if>-->
+<!--            <if test="orderableStatus != null and orderableStatus != ''">-->
+<!--                ,ORDERABLE_STATUS = #{orderableStatus}-->
+<!--            </if>-->
+<!--        </set>-->
+
+        <trim prefix="SET" prefixOverrides="," >
+            <if test="name != null and name != ''">
+                MENU_NAME = #{name}
+            </if>
+            <if test="categoryCode != null and categoryCode gt 0">
+                , CATEGORY_CODE = #{categoryCode}
+            </if>
+            <if test="orderableStatus != null and orderableStatus != ''">
+                , ORDERABLE_STATUS = #{orderableStatus}
+            </if>
+        </trim>
+
+        WHERE
+            MENU_CODE = #{code}
+    </update>
 
 </mapper>
