@@ -16,7 +16,7 @@ public class Application {
             System.out.println("1. CacheTest");
             System.out.println("2. resultMap");
             System.out.println("3. sql");
-            System.out.println("4. insert");
+            System.out.println("4. 프로그램 종료");
 
             System.out.print("\n원하시는 메뉴를 선택하세요: ");
             int no = sc.nextInt();
@@ -28,6 +28,12 @@ public class Application {
                 case 2:
                     resultMapSubMenu();
                     break;
+                case 3:
+                    elementService.sqlTest();
+                    break;
+                case 9:
+                    System.out.println("프로그램을 종료합니다.");
+                    return;
             }
 
         } while (true);
@@ -46,6 +52,7 @@ public class Application {
             System.out.println("2. constructor 테스트");                   // 생성자를 통한 결과 값 매핑
             System.out.println("3. associate 테스트");                     // 관계 맺어진 테이블이 1:1의 포함관계일 경우
             System.out.println("4. collection 테스트");                    // 1 : M 포함 관계일 경우
+            System.out.println("9. 이전 메뉴로 이동");
             System.out.print("\n메뉴 번호를 입력해주세요: ");
 
             int no = sc.nextInt();
@@ -61,7 +68,11 @@ public class Application {
                     elementService.selectResultMapAssociation();
                     break;
                 case 4:
+                    elementService.selectResultMapCollection();
                     break;
+                case 9:
+                    System.out.println("이전메뉴로 이동합니다.");
+                    return;
             }
 
         }while (true);

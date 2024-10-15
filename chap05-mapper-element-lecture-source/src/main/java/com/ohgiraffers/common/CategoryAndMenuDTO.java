@@ -1,19 +1,21 @@
 package com.ohgiraffers.common;
 
-public class CategoryDTO {
+import java.util.List;
+
+public class CategoryAndMenuDTO {
 
     private int code;
     private String name;
-    
-    // null 값이 있을 수 있기 때문에 int가 아닌 Integer로 선언
     private Integer refCategoryCode;
+    private List<MenuDTO> menuList;
 
-    public CategoryDTO(){}
+    public CategoryAndMenuDTO(){}
 
-    public CategoryDTO(int code, String name, Integer refCategoryCode) {
+    public CategoryAndMenuDTO(int code, String name, Integer refCategoryCode, List<MenuDTO> menuList) {
         this.code = code;
         this.name = name;
         this.refCategoryCode = refCategoryCode;
+        this.menuList = menuList;
     }
 
     public int getCode() {
@@ -40,12 +42,21 @@ public class CategoryDTO {
         this.refCategoryCode = refCategoryCode;
     }
 
+    public List<MenuDTO> getMenuList() {
+        return menuList;
+    }
+
+    public void setMenuList(List<MenuDTO> menuList) {
+        this.menuList = menuList;
+    }
+
     @Override
     public String toString() {
-        return "{" +
+        return "CategoryAndMenuDTO{" +
                 "code=" + code +
                 ", name='" + name + '\'' +
                 ", refCategoryCode=" + refCategoryCode +
+                ", menuList=" + menuList +
                 '}';
     }
 }

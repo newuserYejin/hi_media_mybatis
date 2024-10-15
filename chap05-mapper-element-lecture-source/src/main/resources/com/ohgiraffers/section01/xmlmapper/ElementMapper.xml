@@ -75,18 +75,33 @@
             방법 1. 따로 만든 result 이용
     -->
     
-    <resultMap id="categoryResultMap" type="com.ohgiraffers.common.CategoryDTO">
-        <id property="code" column="CATEGORY_CODE"/>
-        <result property="name" column="CATEGORY_NAME"/>
-        <result property="refCategoryCode" column="REF_CATEGORY_CODE"/>
-    </resultMap>
-    
+<!--    <resultMap id="categoryResultMap" type="com.ohgiraffers.common.CategoryDTO">-->
+<!--        <id property="code" column="CATEGORY_CODE"/>-->
+<!--        <result property="name" column="CATEGORY_NAME"/>-->
+<!--        <result property="refCategoryCode" column="REF_CATEGORY_CODE"/>-->
+<!--    </resultMap>-->
+<!--    -->
+<!--    <resultMap id="menuAndCategoryResultMap" type="com.ohgiraffers.common.MenuAndCategoryDTO">-->
+<!--        <id property="code" column="MENU_CODE"/>-->
+<!--        <result property="name" column="MENU_NAME"/>-->
+<!--        <result property="price" column="MENU_PRICE"/>-->
+<!--        <result property="orderableStatus" column="ORDERABLE_STATUS"/>-->
+<!--        <association property="categoryDTO" resultMap="categoryResultMap" />-->
+<!--    </resultMap>-->
+
+    <!--방법 2. 내부에서 선언 사용 -->
+
     <resultMap id="menuAndCategoryResultMap" type="com.ohgiraffers.common.MenuAndCategoryDTO">
         <id property="code" column="MENU_CODE"/>
         <result property="name" column="MENU_NAME"/>
         <result property="price" column="MENU_PRICE"/>
         <result property="orderableStatus" column="ORDERABLE_STATUS"/>
-        <association property="categoryDTO" resultMap="categoryResultMap" />
+
+        <association property="categoryDTO" javaType="com.ohgiraffers.common.CategoryDTO">
+            <id property="code" column="CATEGORY_CODE"/>
+            <result property="name" column="CATEGORY_NAME"/>
+            <result property="refCategoryCode" column="REF_CATEGORY_CODE"/>
+        </association>
     </resultMap>
 
     <select id="selectResultMapAssociationTest" resultMap="menuAndCategoryResultMap" >
@@ -106,5 +121,55 @@
             A.ORDERABLE_STATUS = 'Y';
 
     </select>
+
+    <resultMap id="categoryAndMenuRsultMap" type="com.ohgiraffers.common.CategoryAndMenuDTO">
+        <id property="code" column="category_code"/>
+        <result property="name" column="category_name"/>
+        <result property="refCategoryCode" column="ref_category_code" />
+        <collection property="menuList" ofType="com.ohgiraffers.common.MenuDTO">
+            <id property="code" column="MENU_CODE"/>
+            <result property="name" column="MENU_NAME"/>
+            <result property="price" column="MENU_PRICE"/>
+            <result property="categoryCode" column="CATEGORY_CODE"/>
+            <result property="orderableStatus" column="ORDERABLE_STATUS"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectResultMapCollection" resultMap="categoryAndMenuRsultMap">
+
+        SELECT
+            A.CATEGORY_CODE,
+            A.CATEGORY_NAME,
+            A.REF_CATEGORY_CODE,
+            B.MENU_CODE,
+            B.MENU_NAME,
+            B.MENU_PRICE,
+            B.ORDERABLE_STATUS,
+            B.CATEGORY_CODE
+        FROM
+            TBL_CATEGORY A
+            LEFT JOIN TBL_MENU B ON A.CATEGORY_CODE = B.CATEGORY_CODE
+        ORDER BY
+            A.CATEGORY_CODE
+
+    </select>
+
+    <sql id="menuColumn">
+        MENU_CODE,
+        MENU_NAME,
+        MENU_PRICE,
+        CATEGORY_CODE,
+        ORDERABLE_STATUS
+    </sql>
+
+    <select id="selectSqlTest" resultMap="menuResultMap2">
+
+        SELECT
+            <include refid="menuColumn"></include>
+        FROM
+            TBL_MENU
+
+    </select>
+
 
 </mapper>
