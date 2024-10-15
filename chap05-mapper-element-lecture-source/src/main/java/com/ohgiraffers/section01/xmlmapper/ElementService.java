@@ -1,5 +1,7 @@
 package com.ohgiraffers.section01.xmlmapper;
 
+import com.ohgiraffers.common.MenuAndCategoryDTO;
+import com.ohgiraffers.common.MenuDTO;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
@@ -27,6 +29,48 @@ public class ElementService {
             System.out.println("수행 시간 = " + interval);
             
         }
+        sqlSession.close();
+    }
+
+    public void selectResultMapTest() {
+
+        SqlSession sqlSession = getSqlSession();
+        mapper = sqlSession.getMapper(ElementMapper.class);
+
+        List<MenuDTO> menuDTOList = mapper.selectResultMapTest();
+
+        for(MenuDTO menu : menuDTOList){
+            System.out.println(menu);
+        }
+
+        sqlSession.close();
+    }
+
+    public void selectResultMapConstructor() {
+
+        SqlSession sqlSession = getSqlSession();
+        mapper = sqlSession.getMapper(ElementMapper.class);
+
+        List<MenuDTO> menuList = mapper.selectResultMapConstructor();
+
+        for(MenuDTO menu : menuList){
+            System.out.println(menu);
+        }
+
+        sqlSession.close();
+    }
+
+    public void selectResultMapAssociation() {
+
+        SqlSession sqlSession = getSqlSession();
+        mapper = sqlSession.getMapper(ElementMapper.class);
+
+        List<MenuAndCategoryDTO> menuList = mapper.selectResultMapAssociationTest();
+
+        for(MenuAndCategoryDTO menu : menuList){
+            System.out.println(menu);
+        }
+
         sqlSession.close();
     }
 }

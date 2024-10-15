@@ -19,4 +19,92 @@
             TBL_MENU
     </select>
 
+    <!--resultMap 속성
+        1. id : 매핑 구분 역할
+        2. type : 결과 매핑을 적용하는 대산의 객체 타입
+        3. extends :  기존의 resultMap 을 상속받아 확장
+    -->
+
+    <resultMap id="menuResultMap1" type="com.ohgiraffers.common.MenuDTO">
+        <id property="code" column="MENU_CODE"/>
+        <result property="name" column="MENU_NAME"/>
+        <result property="price" column="MENU_PRICE"/>
+        <result property="categoryCode" column="CATEGORY_CODE"/>
+    </resultMap>
+
+    <resultMap id="menuResultMap2" type="com.ohgiraffers.common.MenuDTO" extends="menuResultMap1">
+        <result property="orderableStatus" column="ORDERABLE_STATUS"/>
+    </resultMap>
+
+    <select id="selectResultMapTest" resultMap="menuResultMap2">
+        SELECT
+            MENU_CODE,
+            MENU_NAME,
+            MENU_PRICE,
+            CATEGORY_CODE,
+            ORDERABLE_STATUS
+        FROM
+            TBL_MENU
+        WHERE
+            ORDERABLE_STATUS = 'Y'
+    </select>
+
+    <resultMap id="menuResultMap3" type="com.ohgiraffers.common.MenuDTO">
+        <constructor>
+            <idArg column="MENU_CODE" javaType="_int"/>
+            <arg column="MENU_NAME" javaType="string"/>
+            <arg column="MENU_PRICE" javaType="_int"/>
+            <arg column="CATEGORY_CODE" javaType="_int"/>
+            <arg column="ORDERABLE_STATUS" javaType="string"/>
+        </constructor>
+    </resultMap>
+
+    <select id="selectResultMapConstructor" resultMap="menuResultMap3">
+
+        SELECT
+            *
+        FROM
+            TBL_MENU
+        WHERE
+            ORDERABLE_STATUS = 'Y'
+
+    </select>
+
+    <!--
+        MenuAndCategory 쓰는 법
+            방법 1. 따로 만든 result 이용
+    -->
+    
+    <resultMap id="categoryResultMap" type="com.ohgiraffers.common.CategoryDTO">
+        <id property="code" column="CATEGORY_CODE"/>
+        <result property="name" column="CATEGORY_NAME"/>
+        <result property="refCategoryCode" column="REF_CATEGORY_CODE"/>
+    </resultMap>
+    
+    <resultMap id="menuAndCategoryResultMap" type="com.ohgiraffers.common.MenuAndCategoryDTO">
+        <id property="code" column="MENU_CODE"/>
+        <result property="name" column="MENU_NAME"/>
+        <result property="price" column="MENU_PRICE"/>
+        <result property="orderableStatus" column="ORDERABLE_STATUS"/>
+        <association property="categoryDTO" resultMap="categoryResultMap" />
+    </resultMap>
+
+    <select id="selectResultMapAssociationTest" resultMap="menuAndCategoryResultMap" >
+
+        SELECT
+            A.MENU_CODE,
+            A.MENU_NAME,
+            A.MENU_PRICE,
+            A.ORDERABLE_STATUS,
+            B.CATEGORY_CODE,
+            B.CATEGORY_NAME,
+            B.REF_CATEGORY_CODE
+        FROM
+            TBL_MENU A
+            JOIN TBL_CATEGORY B ON (A.CATEGORY_CODE = B.CATEGORY_CODE)
+        WHERE
+            A.ORDERABLE_STATUS = 'Y';
+
+    </select>
+
 </mapper>
