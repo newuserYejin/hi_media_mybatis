@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ohgiraffers.section01.xmlmapper.ElementMapper">
+
+    <!--ㅡMapper.xml에서 사용가능한 태그 9가지
+    <cache> , <cache-ref>, <resultMap>, <parameterMap>, <sql>
+    <select> , <insert>, <update>, <delete>
+    -->
+
+    <cache eviction="LRU" flushInterval="1000" size="512" readOnly="true"/>
+
+    <select id="selectCacheTest" resultType="java.lang.String">
+        SELECT
+            MENU_NAME
+        FROM
+            TBL_MENU
+    </select>
+
+</mapper>
